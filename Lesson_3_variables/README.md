@@ -202,3 +202,123 @@ sign-bit is the leftmost bit (MSB)
 - x86 and x86-64 architectures commonly use little endian.
 - PowerPC, ARM, and SPARC architectures can be configured to use either big endian or little endian.
 - Network protocols, such as TCP/IP, typically use big endian for standardized data representation.
+
+
+# signed integer types: short, int, long, long long
+
+- theses types differ in size and therefore their range
+
+short int gradesInMath = -5; // not your best score
+int moneyInBank = -70000; // overdraft
+long populationChange = -85000; // reducing population
+long long countryGDPChange = -70000000000;
+
+
+# unsigned integer types: short, int, long, long long
+
+- Unlike their signed counterparts, unsigned integer variable types cannot contain sign
+information, and hence they can actually support twice as many positive values.
+
+unsigned short int numColorsInRainbow = 7;
+unsigned int numEggsInBasket = 24; // will always be positive
+unsigned long numCarsInNewYork = 700000;
+unsigned long long countryMedicareExpense = 70000000000;
+
+
+# avoiding overflow errors
+
+- all these types above are finite, and if you exceed the limit, you create an overflow
+
+- ex: unsigned short consumes 16 bits (2 bytes) and stores 0 through 2^16 - 1 or 65535
+- when you add 1 to 65535 in an unsigned short, the value overflows to 0
+
+- ex: signed short, range is -32768 to 32767
+- adding 1 to 32767 may result in the signed integer taking the highest negative value (so -32768)
+- that behavior is compiler dependent
+
+- * Listing 3.4 Overflow errors
+
+
+# type float and double
+
+- float point numbers can be positive or negative
+- so if you want to store the value of pi, use a float
+
+float pi = 3.14;
+
+- a double precision float (or a double) can store many more digits than a float
+- double uses 64 bits, float uses 32 bit
+
+- Tip:
+C++14 adds support for chunking separators in the form of a
+single quotation mark. This improves readability of code, as seen
+in the following initializations:
+int moneyInBank = -70'000; // -70000
+long populationChange = -85'000; // -85000
+long long countryGDPChange = -70'000'000'000; // -70 billion
+double pi = 3.141'592'653'59; // 3.14159265359
+
+The data types mentioned thus far are often referred to as POD
+(Plain Old Data). The category POD contains these as well as
+aggregations (structs, enums, unions, or classes) thereof.
+
+
+# using sizeof
+
+- size is the amount of memory that the compiler reserves when the programmer declares a variable to 
+    hold the data assigned to it
+- the size of a variable depends on its type, and C++ has an operator called sizeof that tells you the
+    size in bytes of a variable or a type
+
+- * Listing 3.5 sizeof
+
+- the outputs of the various sizes are specific to the compiler, OS, and hardware
+- the output in the code is specific to running it on a 32-bit compiler on a 64-bit OS
+
+- Note that a 64-bit compiler probably creates different results, and the reason I chose a
+32-bit compiler was to be able to run the application on 32-bit as well as 64-bit systems.
+The output tells that the sizeof a variable doesn’t change between an unsigned or signed
+type; the only difference in the two is the MSB that carries sign information in the former.
+
+- Tip:
+C++11 introduced fixed-width integer types that allow you to
+specify the exact width of the integer in bits. These are int8_t
+or uint8_t for 8-bit signed and unsigned integers, respectively.
+You may also use 16-bit (int16_t, uint16_t), 32-bit (int32_t,
+uint32_t), and 64-bit (int64_t, uint64_t) integer types. To use
+these types, remember to include header
+<cstdint>.
+
+
+# avoid narrowing conversion errors using list initialization
+
+- when you initialize a variable of a smaller integer type (say, short) using another of a larger type (say, an int),
+you are risking a narrowing conversion error b/c the compiler has to fit data stored in a type that can potentially
+hold much larger numbers into a type that doesn't have the same capacity (that is, narrower)
+
+int largeNum = 5000000;
+short smallNum = largeNum; // compiles OK, yet narrowing error
+
+- Narrowing isn’t restricted to conversions between integer types only. You may face
+narrowing errors if you initialize a float using a double, a float (or double) using
+an int, or an int using a float. 
+- Some compilers may warn, but this warning will not cause an error that stops compilation. In such cases, you may be 
+confronted by bugs that occur infrequently and at execution time. 
+
+- To avoid this problem, C++11 recommends list initialization techniques that prevent narrowing. 
+- To use this feature, insert initialization values/variables within braces {…}. 
+
+The list initialization syntax is as follows:
+int largeNum = 5000000;
+short anotherNum{ largeNum }; // error! Amend types
+int anotherNum{ largeNum }; // OK!
+float someFloat{ largeNum }; // error! An int may be narrowed
+float someFloat{ 5000000 }; // OK! 5000000 can be accomodated
+
+- It may not be immediately apparent, but this feature has the potential to spare bugs that
+occur when data stored in a type undergoes a narrowing conversion at execution time—
+these occur implicitly during an initialization and are tough to solve
+
+
+# automatic type inference using auto
+
