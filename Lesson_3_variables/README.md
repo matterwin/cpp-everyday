@@ -322,3 +322,212 @@ these occur implicitly during an initialization and are tough to solve
 
 # automatic type inference using auto
 
+- compilers supporting C++11 and beyond give you the option of not having to expliticitly specify the variable type when using the keyword auto
+
+auto coinFlippedHeads = true;
+
+- we have left the task of defining an exact type for variable coinFlippedHeads to the compiler.
+
+- when you don't initialize a variable of type auto, you get a compile error
+
+- best practice is to only use auto for long and annoying types
+
+
+# Using typedef to Substitute a variable's type
+
+- C++ allows you to substitute variable types to something that you might find convenient
+using typedef
+
+- here is an example where a programmer wants to call an unsigned int a descriptive STRICTLY_POSITIVE_INTEGER
+
+typedef unsigned int STRICTLY_POSITIVE_INTEGER;
+STRICTLY_POSITIVE_INTEGER numEggesInBasket = 4532;
+
+- when compiled, the first line tells the compiler that a STRICTLY_POSITIVE_INTEGER is nothing but an unsigned int.
+- at later stages when the compiler encounters the already defined type STRICTLY_POSITIVE_INTEGER, it substitutes it for unsigned int and continues compilation.
+
+- typedef or type substitution is particularly convenient when dealing with complex types that can have a cumbersome syntax, for ex, types that use templates. (Lesson 14)
+
+
+# constants
+
+- C++ enables you to define a variable as a constant that cannot be changed after declaration (pi would be a great ex of a constant you wouldn't want to change after declaration)
+
+- assignments to a constant causes compilation errors
+
+- constants in C++ can be
+    literal constants
+    declared constants using the const keyword
+    constant expression using the constexpr keyword (new since C++11)
+    enumerated constants using the enum keyword
+    defined constants that are not recommended and deprecated
+
+
+# literal constants
+
+- literal constants can be of many types -- integer, string, and so on.
+
+std::cout << "Hello World" << std::endl;
+
+"Hello World" is a string literal constant
+
+int someNumber = 10; is a literal constant
+int someNumber = 012; // octal 12 evaluates to decimal 10
+int someNUmber = 0b1010; // binary 1010 evaluates to decimal 10 (C++14)
+
+- it's good practice to define variables that are not supposed to change their values as const
+
+
+# constexpr
+
+- keyword constexpr allows function-like declaration of constants:
+
+constexpr double GetPi() { return 22.0/7; }
+
+- one constexpr can use another:
+
+constexpr double TwicePi() { return 2 * GetPi(); }
+
+- constexpr may look like a function, however, allows for optimization possibilities from the compiler's and application's POV
+
+- so long as a compiler is capable of evaluating a constant expression to a constant, it can be used in statements and expressions at places where a constant is expected.
+
+- for ex, TwicePi() is a constexpr that uses a constant expression GetPi().
+- this will possibly trigger a compile-time optimization wherein every usage of TwicePi() is simply replaced by 6.28571 by the compiler, and not the code that would calculate 2 * 22 / 7 when executed
+
+- * Listing 3.8 using constexpr to calculate pi
+
+- GetPi() and TwicePi() may look like functions, but they are not exactly.
+- functions are invoked at program execution time, but these are constant expressions and the compiler had already substituted every usage of GetPi() by 3.14286 and TwicePi() by 6.28571
+
+- compile-time resolution of TwicePi() increases the speed of program execution when compared to the same calculation being contained in a function.
+
+Note:
+Constant expressions need to contain simple implementations that return simple types like integer, double, and so on. 
+C++14 allows constexpr to contain decision-making constructs such as if and switch statements. 
+These conditional statements are discussed in detail in Lesson 6, “Controlling Program Flow.”
+
+The usage of constexpr will not guarantee compile-time optimization—for example, if you use a constexpr expression to double a user provided number. 
+The outcome of such an expression cannot be calculated by the compiler, which may ignore the usage of constexpr and compile as a regular function.
+
+Tip:
+Most popular C++ compilers already supply you with a reasonably precise value of pi in the constant M_PI. 
+You may use this constant in your programs after including header file <cmath>. 
+
+
+# enumerations
+
+- there are situations where a particular variable should be allowed to accept only a certain set of values.
+
+- enumerations come in handy when you need a type of variable whose values are restricted to a certain set defined by you.
+
+keyword enum and enumerations comprise a set of constants called enumerators
+
+enum RainbowColors{
+    Violet = 0,
+    Indigo,
+    Blue,
+    Green,
+    Yellow,
+    Orange,
+    Red
+};
+
+enum CardinalDirections{
+    North,
+    South,
+    East,
+    West
+};
+
+- enumerations are used as user-defined types
+
+- variables of this type can be assigned a range of values restricted to the enumerators contained in the enumeration.
+- so, if defining a variable that contains the colors of a rainbow,  you declare the variable like this:
+
+RainbowColors MyFavoriteColor = Blue; // initial value
+
+- here you declared an enumerated constant MyFavoriteColor of type RainbowColors
+- this enumerated constant variable is restricted to contain any of the legal VIBGYOR colors and no other value.
+
+Note:
+- The compiler converts the enumerator such as Violet and so on into integers.
+- each enumerated value specified is 1 more than the previous value
+- but you have the choice of specifying a starting value, and if this is not specified, the compiler takes it as 0.
+- if you want, you can also specify an explicit value against each of the enumerated constants by initializing them
+
+- * Listing 3.9 enumerators
+
+
+# defining constants using #define
+
+- first and foremost, don't use this if you are writing a program anew.
+- the only reason this book analyzes the def of constants using @define is to help you understand certain legacy programs that do define constants such as pi using this syntax:
+
+#define pi 3.14286
+
+- #define is a preprocessor macro, and what is done here is that all mentions of pi henceforth are replaced by 3.14286 for the compiler to process
+
+- this is a text replacement (read: non-intelligent replacement) done by the preprocessor.
+- the compiler neither knows nor cares about the actual type of the constant in question
+
+CAUTION:
+- defining constants using the preprocessor via #define is deprecated and should not be used
+
+
+# keywords
+
+- variables cannot be named as a reserved word by C++
+
+Keywords:
+asm             else        new                 this
+auto            enum        operator            throw
+bool            explicit    private             true
+break           export      protected           try
+case            extern      public              typedef
+catch           false       register            typeid
+char            float       reinterpret_cast    typename
+class           for         return              union
+const           friend      short               unsigned
+constexpr       goto        signed              using
+continue        if          sizeof              virtual
+default         inline      static              void
+delete          int         static_cast         volatile
+do              long        struct              wchar_t
+double          mutable     switch              while
+dynamic_cast    namespace   template
+
+In addition, the following words are reserved:
+and             bitor       not_eq              xor
+and_eq          compl       or                  xor_eq
+bitand          not         or_eq
+
+
+DO give variables descriptive names,
+even if that makes them long.
+
+DO initialize variables, and use list
+initialization to avoid narrowing conversion errors.
+
+DO ensure that the name of the variable explains its purpose.
+
+DO put yourself into the shoes of
+one who hasn’t seen your code yet
+and think whether the name would
+make sense to him or her.
+
+DO check whether your team is
+following certain naming conventions
+and follow them.
+
+-------
+
+DON’T give names that are too short
+or contain just a character.
+
+DON’T give names that use exotic
+acronyms known only to you.
+
+DON’T give names that are reserved
+C++ keywords as these won’t
+compile.
