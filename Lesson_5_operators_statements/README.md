@@ -64,7 +64,21 @@ bool checkGreaterThanEqualToAgain = (personAge >= 100); // false
 &   AND
 |   OR
 ^   XOR
-
+DO use parentheses to make your
+code and expressions readable.
+DO use the right variable types
+and ensure that it will never reach
+overflow situations.
+DO understand that all l-values (for
+example, variables) can be r-values,
+but not all r-values (for example,
+“Hello World”) can be l-values.
+DON’T program complicated expressions relying on the operator precedence table; your code needs to be
+human readable, too.
+DON’T confuse ++Variable and
+Variable++ thinking they’re the
+same. They’re different when used in
+an assignment.
 - bitwise right shift >>
 - bitwise left shift <<
 
@@ -89,3 +103,24 @@ sizeof(type)
 Note:
 sizeof(...) might look like a function call, but it is not a function.
 sizeof is an operator. Interestingly, this operator cannot be defined by the programmer and hence cannot be overloaded.
+
+
+DO use parentheses to make your
+code and expressions readable.
+
+DO use the right variable types
+and ensure that it will never reach
+overflow situations.
+
+DO understand that all l-values (for
+example, variables) can be r-values,
+but not all r-values (for example,
+“Hello World”) can be l-values.
+
+DON’T program complicated expressions relying on the operator precedence table; your code needs to be
+human readable, too.
+
+DON’T confuse ++Variable and
+Variable++ thinking they’re the
+same. They’re different when used in
+an assignment.
