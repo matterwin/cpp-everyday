@@ -128,6 +128,57 @@ is equivalent to using the array declaration sayHello
 char sayHello[] = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '\0'};
 std::cout << sayHello << std::endl;
 
+Note:
+- strings are essentially char pointers under the hood
+char *str = "Hello";
+
+-------------------------
+
+More advanced stuff:
+    char str[] = "Hello";
+    char *ptr = str;  // Pointer to the beginning of the string
+    
+    // Change the character at index 1 to 'u'
+    *(ptr + 1) = 'u';
+
+or
+    char *str = "Hello";
+    // Attempting to change the character at index 1 (e.g., *(str + 1) = 'u';) would result in undefined behavior
+
+so you cannot edit char* pointers as easily if it is not pointing to an array char, but it's useful for certain situations:
+
+char *str = malloc(100 * sizeof(char)); // dynamic memory allocation for a 99 character string + 1 null terminator
+free(str);
+
+void processString(char *str) {
+    // Process the string
+}
+
+char *str = malloc(100 * sizeof(char));
+strcpy(str, "Hello");  // Copy a string into dynamically allocated memory
+free(str);
+
+Rabbit hole of dynamic memory stuff:
+In C++, use delete to deallocate memory allocated with new.
+In C, use free() to deallocate memory allocated with malloc(), calloc(), or realloc().
+In modern C++, prefer using std::string for string handling to avoid manual memory management.
+
+
+int* ptr = new int; // Allocate memory for a single integer
+// Use ptr
+delete ptr; // Free the allocated memory
+
+
+char* str = (char*)malloc(100 * sizeof(char)); // Allocate memory for a string
+// Use str
+free(str); // Free the allocated memory
+
+
+#include <string>
+std::string str = "Hello"; // No need to manage memory manually
+
+-------------------------
+
 - note the last character is a null character '\0'
 - this is called a string terminator
 - it tells the compiler the string has ended 
