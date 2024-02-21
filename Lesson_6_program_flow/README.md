@@ -64,3 +64,22 @@ adequate attention to sequence.
 DON’T use complicated conditions or
 expressions when using conditional
 operators (?:).
+
+
+# loops
+
+int someNums[] = { 1, 101, -1, 40, 2040 };
+for (int aNum : someNums) // range based for
+ cout << "The array elements are " << aNum << endl;
+
+- for, while, do-while loops you should know
+
+- use continue to skip over current iteration of loop
+- use break to break out of the entire loop
+- use return to break and and return from the current function
+
+- can use auto to compose a for loop 
+
+for (auto anElement : elements) // range based for
+ cout << "Array elements are " << anElement << endl;
+
